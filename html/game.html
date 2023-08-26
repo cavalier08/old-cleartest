@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="../css/game.css" rel="stylesheet">
+    <link href="../css/fullsim.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">
+            <button>
+                <a href="../index.html">
+                    ClearQuest
+                </a>
+            </button>
+        </div>
+        
+        <div class="navspacer">
+    
+        </div>
+        <div class="nav-right">
+            <button>
+                <a href="game.html">
+                    Play
+                </a>
+            </button>
+            <div class="dropdown">
+                <button class="dropdown-button">
+                    <a href="overview.html">
+                        Overview
+                        
+                    </a>
+                </button>
+                <div class="dropdown-content">
+                    <button >
+                        <a href="how-to-play.html">
+                            How To Play
+                        </a>
+                    </button>
+                    <button >
+                        <a href="countries.html">
+                            Countries
+                        </a>
+                    </button>
+                    <button >
+                        <a href="industries.html">
+                            Industries
+                        </a>
+                    </button>
+                    <button >
+                        <a href="policies.html">
+                            Policies
+                        </a>
+                    </button>
+                </div>
+            </div>
+        
+            
+        
+            <button >
+                <a href="settings.html">
+                    Settings
+                </a>
+            </button>
+            <button >
+                <a href="exit.html">
+                    Exit
+                </a>
+            </button>
+        </div>
+        
+    </div>
+</head>
+<body>
+
+    <button id="runSimulation" class="run-simulation-button">Run Simulation</button>
+
+  <div id="container" class="country-container">
+    <!-- Country blocks will be dynamically added here -->
+    
+  </div>
+
+  <div class="graph-container">
+    <h3>Norlandia</h3>
+  <canvas class="graph" id="norlandiaChart"></canvas>
+  <h3>Sudoria</h3>
+  <canvas class="graph" id="sudoriaChart" ></canvas>
+  <h3>Estasia</h3>
+  <canvas class="graph" id="estasiaChart"></canvas>
+  <h3>WestHaven</h3>
+  <canvas class="graph" id="westhavenChart"></canvas>
+  <h3>Australen</h3>
+  <canvas class="graph" id="australenChart" ></canvas>
+  </div>
+
+  <!-- Loading Bar Container -->
+  <div id="loading-bar" style="width: 0%; height: 30px; background-color: green;"></div>
+
+</body>
+<script src="../js/app.js"></script> <!-- Include your JavaScript file here -->
+<img class="background" src="../img/rose_background.jpg">
+
+</body>
+</html>
