@@ -361,7 +361,7 @@ function promptUser(selectedPolicies) {
     const closeModal = document.querySelector(".modal-close");
     policyButtonContainer.innerHTML = "";
 
-    closeModal.onclick = function() {
+    closeModal.onclick = function () {
       modal.style.display = "none";
       resolve(null);
     };
@@ -369,7 +369,7 @@ function promptUser(selectedPolicies) {
     selectedPolicies.forEach((policy, index) => {
       const button = document.createElement("button");
       button.textContent = policy.name;
-      button.onclick = function() {
+      button.onclick = function () {
         modal.style.display = "none";
         resolve(selectedPolicies[index]);
       };
@@ -441,7 +441,6 @@ function setDifficulty(difficulty) {
   document.getElementById("difficultyModal").style.display = "none";
   runSimulation();
 }
-
 
 const randomEvents = [
   {
@@ -525,7 +524,7 @@ async function simulateDay(countries, difficulty) {
   console.log("ran simulate");
   let selectedPolicies = getRandomPolicies(policyPool, 3);
 
-  let chosenPolicy = await promptUser(selectedPolicies);  // Now it will wait
+  let chosenPolicy = await promptUser(selectedPolicies); // Now it will wait
   console.log(chosenPolicy);
 
   triggerRandomEvent(countries);
@@ -583,8 +582,8 @@ function formatObject(obj) {
 const container = document.getElementById("container");
 const policyButtons = document.getElementById("policyButtons");
 
-// format economy 
-function formatEconomyValue(economyValue){
+// format economy
+function formatEconomyValue(economyValue) {
   if (economyValue >= 1_000_000_000_000) {
     return `${(economyValue / 1_000_000_000_000).toFixed(2)}T`;
   } else if (economyValue >= 1_000_000_000) {
@@ -624,8 +623,7 @@ function updateCountryInfo() {
   countryBlocks.forEach((block, index) => {
     block.innerHTML = `
       <h2>${allCountries[index].countryName}<div class="bar"> </div></h2>
-      <p>Population: ${allCountries[index].population}</p>
-      <p>Population: ${allCountries[index].population}</p>
+      <p>Economy: ${formatEconomyValue(allCountries[index].economy)}</p>
       <p>Happiness: ${parseFloat(allCountries[index].happiness).toFixed(2)}</p>
       <p>TotalPollution: ${parseFloat(
         allCountries[index].totalPollution
@@ -649,17 +647,15 @@ function updateCountryInfo() {
   });
 }
 
-let currentBlock = null;
-
 function showCountryBlock(countryName) {
-  if (currentBlock) {
-    currentBlock.style.display = "none";
-  }
+  const allBlocks = document.querySelectorAll(".country-block");
+  allBlocks.forEach((block) => {
+    block.style.display = "none";
+  });
   const block = document.getElementById(countryName + "Block");
   if (block) {
     block.style.display = "block";
   }
-  currentBlock = block;
 }
 
 // Display country blocks
@@ -905,10 +901,11 @@ document.getElementById("runSimulation").addEventListener("click", function () {
   chooseDifficulty();
 });
 
-document.getElementById("startNextRound").addEventListener("click", function () {
-  isNextRoundReady = true;
-});
-
+document
+  .getElementById("startNextRound")
+  .addEventListener("click", function () {
+    isNextRoundReady = true;
+  });
 
 async function runSimulation() {
   let gameIsRunning = true;
@@ -957,7 +954,6 @@ async function runSimulation() {
     console.log("Invalid difficulty level chosen.");
   }
 }
-
 
 // Initialize the UI when the page loads
 function initializeUI() {
