@@ -589,7 +589,7 @@ function createCountryBlock(country) {
   block.className = "country-block";
   block.id = country.countryName + "Block";
   block.innerHTML = `
-    <h2>${country.countryName}</h2>
+    <h2>${country.countryName}<div class="bar"> </div></h2>
     <p>Economy: ${country.economy}</p>
     <p>Happiness: ${parseFloat(country.happiness).toFixed(2)}</p>
     <p>Total Pollution: ${parseFloat(country.totalPollution).toFixed(2)}</p>
@@ -610,7 +610,7 @@ function updateCountryInfo() {
   const countryBlocks = document.querySelectorAll(".country-block");
   countryBlocks.forEach((block, index) => {
     block.innerHTML = `
-      <h2>${allCountries[index].countryName}</h2>
+      <h2>${allCountries[index].countryName}<div class="bar"> </div></h2>
       <p>Population: ${allCountries[index].population}</p>
       <p>Economy: ${allCountries[index].economy}</p>
       <p>Happiness: ${parseFloat(allCountries[index].happiness).toFixed(2)}</p>
