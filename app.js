@@ -1,4 +1,4 @@
-//0.7.3
+//0.7.4
 class Country {
   constructor(
     countryName,
@@ -355,17 +355,34 @@ function getRandomPolicies(policies, count) {
 }
 
 function promptUser(selectedPolicies) {
-  let userChoice = window.prompt(
-    "Choose a policy: " +
-      selectedPolicies
-        .map((policy, index) => `${index + 1}. ${policy.name}`)
-        .join(", ")
-  );
-  if (parseInt(userChoice) === 4) {
-    return null;
+  return new Promise((resolve) => {
+    const policyButtonContainer = document.getElementById("policyButtons");
+    policyButtonContainer.innerHTML = "";
+
+    selectedPolicies.forEach((policy, index) => {
+      const button = document.createElement("button");
+      button.textContent = policy.name;
+      button.addEventListener("click", function() {
+        resolve(selectedPolicies[index]);
+      });
+      policyButtonContainer.appendChild(button);
+    });
+
+    const cancelButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    cancelButton.addEventListener("click", function() {
+      resolve(null);
+    });
+    policyButtonContainer.appendChild(cancelButton);
+  });
+}
+
+function handlePolicyChoice(selectedPolicy) {
+  if (selectedPolicy) {
+    console.log("You selected:", selectedPolicy.name);
+  } else {
+    console.log("Canceled or No policy selected");
   }
-  let selectedPolicy = selectedPolicies[parseInt(userChoice) - 1]; // assuming choices are 1-indexed
-  return selectedPolicy;
 }
 
 const maxPerCapitaIncome = 500000;
@@ -494,11 +511,11 @@ function updateData(country, countryData) {
   countryData.waterPollution.push(country.waterPollution);
 }
 
-function simulateDay(countries, difficulty) {
+async function simulateDay(countries, difficulty) {
   console.log("ran simulate");
   let selectedPolicies = getRandomPolicies(policyPool, 3);
 
-  let chosenPolicy = promptUser(selectedPolicies);
+  let chosenPolicy = await promptUser(selectedPolicies);  // Now it will wait
   console.log(chosenPolicy);
 
   triggerRandomEvent(countries);
@@ -866,7 +883,7 @@ document
     if (difficulties[chosenDifficulty]) {
       while (gameIsRunning) {
         // Loop will continue running until gameIsRunning is set to false
-        simulateDay(allCountries, chosenDifficulty);
+        await(simulateDay(allCountries, chosenDifficulty));
         updateCountryInfo();
 
         // Update and check each country
