@@ -1,54 +1,71 @@
 /*0.7.5 CSS code (styles.css) */
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-  }
-  
-  #container {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-  }
-  
-  .country-block {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 20px;
-    width: 200px;
-    margin: 10px;
-    text-align: center;
-  }
-  
-  #policyButtons {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  
-  #runSimulation {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  .hidden {
-    display: none;
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+#container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.country-block {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 200px;
+  margin: 10px;
+  text-align: center;
+}
+
+#policyButtons {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+button {
+  flex: 1 1 calc(33.333% - 20px);
+  margin: 10x;
+  padding: 8px 8px;
+  max-width: calc(33.333% - 20px);
+  background-color: #444;
+  color: #ddd;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease 0s;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+button:hover {
+  background-color: #666;
+  box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+#runSimulation {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+
 /* Loading Bar Styles */
 #loading-bar-container {
   width: 100%;
@@ -69,7 +86,7 @@ body {
   padding: 10px;
   margin: 5px;
   text-align: center;
-  cursor: pointer; /* Makes it obvious you can interact with these divs */
+  cursor: pointer;
 }
 
 /* The Modal */
@@ -80,7 +97,8 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 999;
 }
 
 .modal-content {
@@ -88,28 +106,36 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background-color: #333;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 40%;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  font-family: 'Arial', sans-serif; 
+  text-align: center;
+  color:#fff;
 }
 
 .modal-close {
   float: right;
   cursor: pointer;
-}
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.7);
+  font-size: 24px; 
+  font-weight: bold;
+  margin-top: -10px;
+  margin-right: -10px;
 }
 
-.modal-content {
-  margin: auto;
-  padding: 20px;
-  background: white;
-  width: 50%;
+.modal-close:hover {
+  color: red; 
+}
+
+#policyTitle {
+  font-family: 'Arial', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ccc;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px #000;
 }
