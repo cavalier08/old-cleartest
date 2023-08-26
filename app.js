@@ -1,4 +1,4 @@
-//0.7.4
+//0.7.5
 class Country {
   constructor(
     countryName,
@@ -357,23 +357,27 @@ function getRandomPolicies(policies, count) {
 function promptUser(selectedPolicies) {
   return new Promise((resolve) => {
     const policyButtonContainer = document.getElementById("policyButtons");
+    const modal = document.getElementById("policyModal");
+    const closeModal = document.querySelector(".modal-close");
     policyButtonContainer.innerHTML = "";
+
+    closeModal.onclick = function() {
+      modal.style.display = "none";
+      resolve(null);
+    };
 
     selectedPolicies.forEach((policy, index) => {
       const button = document.createElement("button");
       button.textContent = policy.name;
-      button.addEventListener("click", function() {
+      button.onclick = function() {
+        modal.style.display = "none";
         resolve(selectedPolicies[index]);
-      });
+      };
       policyButtonContainer.appendChild(button);
     });
 
-    const cancelButton = document.createElement("button");
-    cancelButton.textContent = "Cancel";
-    cancelButton.addEventListener("click", function() {
-      resolve(null);
-    });
-    policyButtonContainer.appendChild(cancelButton);
+    // Show the modal
+    modal.style.display = "block";
   });
 }
 
@@ -425,13 +429,19 @@ function applyDifficultySettings(country, difficulty) {
     difficulties[difficulty].policyEffectMultiplier;
 }
 
+let chosenDifficulty = null;
+
 function chooseDifficulty() {
   console.log("choose difficulty");
-  let chosenDifficulty = prompt(
-    "Choose a difficulty level (easy/normal/hard):"
-  );
-  return chosenDifficulty;
+  document.getElementById("difficultyModal").style.display = "block";
 }
+
+function setDifficulty(difficulty) {
+  chosenDifficulty = difficulty;
+  document.getElementById("difficultyModal").style.display = "none";
+  runSimulation();
+}
+
 
 const randomEvents = [
   {
@@ -871,58 +881,68 @@ function checkGameOverOrWin(country) {
   return false;
 }
 
-// Add click event for the "Run Simulation" button
-document
-  .getElementById("runSimulation")
-  .addEventListener("click", async function () {
-    let chosenDifficulty = chooseDifficulty();
+let isNextRoundReady = false;
 
-    // This flag will keep track of whether the game is still running.
-    let gameIsRunning = true;
+document.getElementById("runSimulation").addEventListener("click", function () {
+  document.getElementById("runSimulation").style.visibility = "hidden";
+  document.getElementById("startNextRound").style.display = "block";
 
-    if (difficulties[chosenDifficulty]) {
-      while (gameIsRunning) {
-        // Loop will continue running until gameIsRunning is set to false
-        await(simulateDay(allCountries, chosenDifficulty));
-        updateCountryInfo();
+  chooseDifficulty();
+});
 
-        // Update and check each country
-        const countries = [norlandia, sudoria, estasia, westhaven, australen];
-        const dataSets = [
-          norlandiaData,
-          sudoriaData,
-          estasiaData,
-          westhavenData,
-          australenData,
-        ];
-        const canvasIds = [
-          "norlandiaChart",
-          "sudoriaChart",
-          "estasiaChart",
-          "westhavenChart",
-          "australenChart",
-        ];
+document.getElementById("startNextRound").addEventListener("click", function () {
+  isNextRoundReady = true;
+});
 
-        for (let i = 0; i < countries.length; i++) {
-          await updateData(countries[i], dataSets[i]);
-          await plotData(canvasIds[i], dataSets[i]);
 
-          // Add the check for game over or won scenarios
-          if (checkGameOverOrWin(countries[i])) {
-            gameIsRunning = false; // This will break out of the while loop
-            break; // Break out of the for loop if game is over or won for this country
-          }
-        }
+async function runSimulation() {
+  let gameIsRunning = true;
 
-        // Wait for 1 second before the next iteration
-        if (gameIsRunning) {
-          await animateLoadingBar(3000);
+  if (difficulties[chosenDifficulty]) {
+    while (gameIsRunning) {
+      while (!isNextRoundReady) {
+        await new Promise((r) => setTimeout(r, 500));
+      }
+      isNextRoundReady = false;
+
+      await simulateDay(allCountries, chosenDifficulty);
+      updateCountryInfo();
+
+      const countries = [norlandia, sudoria, estasia, westhaven, australen];
+      const dataSets = [
+        norlandiaData,
+        sudoriaData,
+        estasiaData,
+        westhavenData,
+        australenData,
+      ];
+      const canvasIds = [
+        "norlandiaChart",
+        "sudoriaChart",
+        "estasiaChart",
+        "westhavenChart",
+        "australenChart",
+      ];
+
+      for (let i = 0; i < countries.length; i++) {
+        await updateData(countries[i], dataSets[i]);
+        await plotData(canvasIds[i], dataSets[i]);
+
+        if (checkGameOverOrWin(countries[i])) {
+          gameIsRunning = false;
+          break;
         }
       }
-    } else {
-      console.log("Invalid difficulty level chosen.");
+
+      if (gameIsRunning) {
+        await animateLoadingBar(3000);
+      }
     }
-  });
+  } else {
+    console.log("Invalid difficulty level chosen.");
+  }
+}
+
 
 // Initialize the UI when the page loads
 function initializeUI() {
