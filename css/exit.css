@@ -1,0 +1,40 @@
+
+.creator img {
+    width: 13vw;
+    height: 13vw;
+    border-radius: 6.5vw;
+}
+
+.thanks {
+    width: 100%;
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 10%;
+}
+
+h2 {
+    font-size: 80px;
+}
+
+.creator-container {
+    width: 70%;
+    margin: auto;
+    display: flex;
+}
+
+.creator {
+    text-align: center;
+    margin: auto;
+}
+
+.play-again {
+ 
+    position: absolute;
+    bottom: 5%;
+    left: 46%;
+}
+
+.play-again a:hover {
+    color: var(--orange);
+}
+
