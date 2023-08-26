@@ -1,4 +1,4 @@
-//0.7.2
+//0.7.3
 class Country {
   constructor(
     countryName,
@@ -616,20 +616,51 @@ allCountries.forEach((country) => {
   container.appendChild(countryBlock);
 });
 
+function redirectToCountryPage(countryName) {
+  switch (countryName) {
+    case 'Norlandia':
+      window.location.href = "norlandia.html";
+      break;
+    case 'Sudoria':
+      window.location.href = "sudoria.html";
+      break;
+    case 'Estasia':
+      window.location.href = "estasia.html";
+      break;
+    case 'WestHaven':
+      window.location.href = "westhaven.html";
+      break;
+    case 'Australen':
+      window.location.href = "australen.html";
+      break;
+    default:
+      console.error('Invalid country name:', countryName);
+      break;
+  }
+}
+
+// Add event listeners
 const norlandiaRegion = document.getElementById("norlandiaRegion");
 norlandiaRegion.addEventListener('mouseover', () => showCountryBlock('Norlandia'));
+norlandiaRegion.addEventListener('click', () => redirectToCountryPage('Norlandia'));
 
 const sudoriaRegion = document.getElementById("sudoriaRegion");
 sudoriaRegion.addEventListener('mouseover', () => showCountryBlock('Sudoria'));
+sudoriaRegion.addEventListener('click', () => redirectToCountryPage('Sudoria'));
 
 const estasiaRegion = document.getElementById("estasiaRegion");
 estasiaRegion.addEventListener('mouseover', () => showCountryBlock('Estasia'));
+estasiaRegion.addEventListener('click', () => redirectToCountryPage('Estasia'));
 
 const westhavenRegion = document.getElementById("westhavenRegion");
-westhavenRegion.addEventListener('mouseover', () => showCountryBlock('Westhaven'));
+westhavenRegion.addEventListener('mouseover', () => showCountryBlock('WestHaven'));
+westhavenRegion.addEventListener('click', () => redirectToCountryPage('WestHaven'));
 
 const australenRegion = document.getElementById("australenRegion");
 australenRegion.addEventListener('mouseover', () => showCountryBlock('Australen'));
+australenRegion.addEventListener('click', () => redirectToCountryPage('Australen'));
+
+
 
 // If you'd like to hide the blocks when the mouse moves out of the region:
 const allRegions = [norlandiaRegion, sudoriaRegion, estasiaRegion, westhavenRegion, australenRegion];
