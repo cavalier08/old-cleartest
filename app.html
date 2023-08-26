@@ -1,4 +1,4 @@
-<!--0.6.2-->
+<!--0.7.2-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,9 +10,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
+    <div class="map-container">
+      <!-- Simulated country regions as blocks -->
+      <div id="norlandiaRegion" class="country-region">Norlandia</div>
+      <div id="sudoriaRegion" class="country-region">Sudoria</div>
+      <div id="estasiaRegion" class="country-region">Estasia</div>
+      <div id="westhavenRegion" class="country-region">WestHaven</div>
+      <div id="australenRegion" class="country-region">Australen</div>
+    </div>
+    
     <div id="container" class="country-container">
       <!-- Country blocks will be dynamically added here -->
     </div>
+    
     <h3>Norlandia</h3>
     <canvas id="norlandiaChart" width="400" height="200"></canvas>
     <h3>Sudoria</h3>
@@ -23,12 +33,12 @@
     <canvas id="westhavenChart" width="400" height="200"></canvas>
     <h3>Australen</h3>
     <canvas id="australenChart" width="400" height="200"></canvas>
+    
     <button id="runSimulation" class="run-simulation-button">
       Run Simulation
     </button>
     <!-- Loading Bar Container -->
     <div id="loading-bar" style="width: 0%; height: 30px; background-color: green;"></div>
-
   </body>
   <script src="app.js"></script>
   <!-- Include your JavaScript file here -->
