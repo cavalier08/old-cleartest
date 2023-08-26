@@ -1,18 +1,35 @@
-<!--0.6.1-->
+<!--0.6.2-->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Country Simulation</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Include your CSS file here -->
-</head>
-<body>
-  <div id="container" class="country-container">
-    <!-- Country blocks will be dynamically added here -->
-    
-  </div>
-  <button id="runSimulation" class="run-simulation-button">Run Simulation</button>
-</body>
-<script src="app.js"></script> <!-- Include your JavaScript file here -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Country Simulation</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Include your CSS file here -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div id="container" class="country-container">
+      <!-- Country blocks will be dynamically added here -->
+    </div>
+    <h3>Norlandia</h3>
+    <canvas id="norlandiaChart" width="400" height="200"></canvas>
+    <h3>Sudoria</h3>
+    <canvas id="sudoriaChart" width="400" height="200"></canvas>
+    <h3>Estasia</h3>
+    <canvas id="estasiaChart" width="400" height="200"></canvas>
+    <h3>WestHaven</h3>
+    <canvas id="westhavenChart" width="400" height="200"></canvas>
+    <h3>Australen</h3>
+    <canvas id="australenChart" width="400" height="200"></canvas>
+    <button id="runSimulation" class="run-simulation-button">
+      Run Simulation
+    </button>
+    <!-- Loading Bar Container -->
+    <div id="loading-bar" style="width: 0%; height: 30px; background-color: green;"></div>
+
+  </body>
+  <script src="app.js"></script>
+  <!-- Include your JavaScript file here -->
 </html>
