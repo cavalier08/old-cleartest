@@ -1,4 +1,4 @@
-//0.5.2
+//0.5.3
 class Country {
   constructor(
     countryName,
@@ -292,12 +292,45 @@ function calculateHappiness(country) {
   return happiness;
 }
 
-function simulateDay(countries) {
+const difficulties = {
+  easy: {
+    pollutionRateMultiplier: 0.5,
+    resourceConsumptionMultiplier: 0.8,
+    policyEffectMultiplier: 1.2,
+  },
+  normal: {
+    pollutionRateMultiplier: 1,
+    resourceConsumptionMultiplier: 1,
+    policyEffectMultiplier: 1,
+  },
+  hard: {
+    pollutionRateMultiplier: 1.5,
+    resourceConsumptionMultiplier: 1.2,
+    policyEffectMultiplier: 0.8,
+  },
+};
+
+function applyDifficultySettings(country, difficulty) {
+  country.pollutionRateMultiplier =
+    difficulties[difficulty].pollutionRateMultiplier;
+  country.resourceConsumptionMultiplier =
+    difficulties[difficulty].resourceConsumptionMultiplier;
+  country.policyEffectMultiplier =
+    difficulties[difficulty].policyEffectMultiplier;
+}
+
+function chooseDifficulty(){
+  let chosenDifficulty = prompt("Choose a difficulty level (easy/normal/hard):");
+  return chosenDifficulty;
+}
+
+function simulateDay(countries, difficulty) {
   let selectedPolicies = getRandomPolicies(policyPool, 3);
 
   let chosenPolicy = promptUserForPolicy(selectedPolicies);
 
   for (let country of countries) {
+    applyDifficulty(country, difficulty);
     chosenPolicy.apply(country);
     country.renewResource();
     country.consumeResources();
@@ -306,4 +339,11 @@ function simulateDay(countries) {
 }
 let allCountries = [norlandia, sudoria, estasia, westhaven, australen];
 
-simulateDay(allCountries);
+let chosenDifficulty=chooseDifficulty();
+
+if (difficulties[chosenDifficulty]) {
+  // Simulate a day with the chosen difficulty
+  simulateDay(allCountries, chosenDifficulty);
+} else {
+  console.log("Invalid difficulty level chosen.");
+}
