@@ -583,6 +583,19 @@ function formatObject(obj) {
 const container = document.getElementById("container");
 const policyButtons = document.getElementById("policyButtons");
 
+// format economy 
+function formatEconomyValue(economyValue){
+  if (economyValue >= 1_000_000_000_000) {
+    return `${(economyValue / 1_000_000_000_000).toFixed(2)}T`;
+  } else if (economyValue >= 1_000_000_000) {
+    return `${(economyValue / 1_000_000_000).toFixed(2)}B`;
+  } else if (economyValue >= 1_000_000) {
+    return `${(economyValue / 1_000_000).toFixed(2)}M`;
+  } else {
+    return economyValue.toLocaleString();
+  }
+}
+
 // Function to create country blocks
 function createCountryBlock(country) {
   const block = document.createElement("div");
@@ -590,7 +603,7 @@ function createCountryBlock(country) {
   block.id = country.countryName + "Block";
   block.innerHTML = `
     <h2>${country.countryName}<div class="bar"> </div></h2>
-    <p>Economy: ${country.economy}</p>
+    <p>Economy: ${formatEconomyValue(country.economy)}</p>
     <p>Happiness: ${parseFloat(country.happiness).toFixed(2)}</p>
     <p>Total Pollution: ${parseFloat(country.totalPollution).toFixed(2)}</p>
     <p>Air Pollution: ${parseFloat(country.airPollution).toFixed(2)}</p>
@@ -612,7 +625,7 @@ function updateCountryInfo() {
     block.innerHTML = `
       <h2>${allCountries[index].countryName}<div class="bar"> </div></h2>
       <p>Population: ${allCountries[index].population}</p>
-      <p>Economy: ${allCountries[index].economy}</p>
+      <p>Population: ${allCountries[index].population}</p>
       <p>Happiness: ${parseFloat(allCountries[index].happiness).toFixed(2)}</p>
       <p>TotalPollution: ${parseFloat(
         allCountries[index].totalPollution
