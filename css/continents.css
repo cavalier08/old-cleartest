@@ -7,4 +7,5 @@ body {
     position:absolute;
     margin-left: 50px;
     margin-top:-75px;
+    z-index: -1;
 }
