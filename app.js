@@ -695,7 +695,7 @@ estasiaRegion.addEventListener("click", () => redirectToCountryPage("Estasia"));
 
 const westhavenRegion = document.getElementById("westhavenRegion");
 westhavenRegion.addEventListener("mouseover", () =>
-  showCountryBlock("WestHaven")
+  showCountryBlock("Westhaven")
 );
 westhavenRegion.addEventListener("click", () =>
   redirectToCountryPage("WestHaven")
