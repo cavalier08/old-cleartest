@@ -1,4 +1,4 @@
-//0.6.1
+//0.6.2
 class Country {
   constructor(
     countryName,
@@ -12,7 +12,8 @@ class Country {
     Im,
     Ex,
     economy,
-    happiness
+    happiness,
+    pollutionTolerance
   ) {
     this.countryName = countryName;
     // Pollution Levels
@@ -41,6 +42,8 @@ class Country {
 
     // Happiness Level
     this.happiness = happiness;
+
+    this.pollutionTolerance = pollutionTolerance;
   }
 
   calculateTotalPollution() {
@@ -90,13 +93,23 @@ class Country {
   renewResource() {
     this.naturalResource["forests"] += 0.1 * (100 - this.totalPollution);
   }
+
+  removeFactory(factory, num){
+    this.factories[factory]-=num;
+    if(this.factories[factory]<0){this.factories[factory]=0;}
+  }
+  addFactory(factory, num){
+    this.factories[factory]+=num;
+    if(this.factories[factory]<0){this.factories[factory]=0;}
+  }
+
 }
 
 // Define pollution percentages associated with each resource
 const globalPollutionPercentages = {
-  oil: 5, // 5% pollution due to using oil
-  coal: 8, // 8% pollution due to using coal
-  forests: 3, // 3% pollution due to deforestation
+  oil: 0.1, // 50% pollution due to using oil (original: 5%)
+  coal: 0.16, // 80% pollution due to using coal (original: 8%)
+  forests: 0.06, // 30% pollution due to deforestation (original: 3%)
 };
 
 // Define fractions of pollution that contribute to each type (air, water, land) for each resource
@@ -127,17 +140,17 @@ class Factory {
 }
 
 const globalFactories = {
-  tech: new Factory("tech", { oil: 2 }, 1200),
-  car: new Factory("car", { coal: 3, oil: 5 }, 800),
-  mining: new Factory("mining", { forests: 2 }, 1000),
-  renewable_energy: new Factory("renewable_energy", { coal: 4, oil: 2 }, 1500),
-  agriculture: new Factory("agriculture", { coal: 1, forests: 1 }, 600),
-  textile: new Factory("textile", { coal: 2, forests: 1 }, 700),
-  electronics: new Factory("electronics", { coal: 2, oil: 3 }, 1300),
-  machinery: new Factory("machinery", { coal: 3, oil: 2 }, 1100),
-  garments: new Factory("garments", { coal: 1, oil: 1 }, 500),
-  software: new Factory("software", { oil: 3 }, 2000),
-  tourism: new Factory("tourism", { coal: 2 }, 900),
+  tech: new Factory("tech", { oil: 0.1 }, 1200),
+  car: new Factory("car", { coal: 0.15, oil: 0.25 }, 800),
+  mining: new Factory("mining", { forests: 0.1 }, 1000),
+  renewable_energy: new Factory("renewable_energy", { coal: 0.2, oil: 0.1 }, 1500),
+  agriculture: new Factory("agriculture", { coal: 0.05, forests: 0.3 }, 600),
+  textile: new Factory("textile", { coal: 0.1, forests: 0.05 }, 700),
+  electronics: new Factory("electronics", { coal: 0.1, oil: 0.15 }, 1300),
+  machinery: new Factory("machinery", { coal: 0.15, oil: 0.1 }, 1100),
+  garments: new Factory("garments", { coal: 0.05, oil: 0.05 }, 500),
+  software: new Factory("software", { oil: 0.15 }, 2000),
+  tourism: new Factory("tourism", { coal: 0.1,forests:0.1 }, 900),
 };
 
 const globalResourceCosts = {
@@ -152,13 +165,14 @@ let norlandia = new Country(
   30,
   10,
   10,
-  { oil: 30, coal: 15, forests: 50 },
+  { oil: 1000, coal: 1500, forests: 5000 },
   { tech: 270, car: 200, renewable_energy: 150 },
-  100000000,
+  10000000,
   { cars: 12000, fruits: 45000 },
   { electronics: 22000 },
   3500000000000,
-  85
+  85,
+  70
 );
 
 //africa
@@ -168,13 +182,14 @@ let sudoria = new Country(
   40,
   30,
   10,
-  { oil: 50, coal: 30, forests: 40 },
+  { oil: 2000, coal: 3000, forests: 4000 },
   { mining: 220, agriculture: 260, textile: 80 },
-  120000000,
+  12000000,
   { cars: 3000, fruits: 60000 },
   { electronics: 1000 },
   1500000000000,
-  65
+  45,
+  100
 );
 
 //asia
@@ -184,13 +199,14 @@ let estasia = new Country(
   50,
   20,
   20,
-  { oil: 45, coal: 50, forests: 30 },
+  { oil: 4500, coal: 6000, forests: 30000 },
   { electronics: 480, machinery: 320, garments: 350 },
-  1400000000,
+  140000000,
   { cars: 20000, fruits: 50000 },
   { electronics: 50000 },
   11000000000000,
-  75
+  65,
+  90
 );
 
 //north america
@@ -200,13 +216,14 @@ let westhaven = new Country(
   35,
   15,
   10,
-  { oil: 25, coal: 20, forests: 60 },
+  { oil: 2500, coal: 4000, forests: 6000 },
   { car: 280, software: 400, agriculture: 230 },
-  320000000,
+  32000000,
   { cars: 15000, fruits: 40000 },
   { electronics: 30000 },
   19000000000000,
-  80
+  80,
+  70
 );
 
 //south america and australia
@@ -216,13 +233,14 @@ let australen = new Country(
   30,
   15,
   10,
-  { oil: 20, coal: 40, forests: 65 },
+  { oil: 4000, coal: 7000, forests: 2000 },
   { mining: 210, agriculture: 150, tourism: 90 },
-  25000000,
+  2500000,
   { cars: 8000, fruits: 25000 },
   { electronics: 7000 },
   1500000000000,
-  82
+  82,
+  80
 );
 
 class Policy {
@@ -232,21 +250,29 @@ class Policy {
   }
 
   apply(country) {
-    for (let factoryType in this.effects) {
-      if (factoryType in country.factoriesQuantities) {
-        this.effects[factoryType](globalFactories[factoryType]);
+  
+    if (country.factories === undefined) {
+      console.error("country.factories is undefined!");
+      return;
+    }
+  
+    for (let factoryType in this.effect) {
+      console.log("Checking for factory:", factoryType);
+      if (factoryType in country.factories) {
+        this.effect[factoryType](globalFactories[factoryType]);
       }
     }
-    country.consumeResources(); // Re-evaluate after policy effects
   }
 }
 
 const electricCarIncentive = new Policy("Electric Car Incentive", {
   car: (factory) => {
     factory.economicGain *= 0.5; // Reduce economic gain of car factories by 50%
+    factory.resourceConsumption["oil"]=0;
   },
   tech: (factory) => {
     factory.economicGain *= 1.1; // Increase economic gain of tech factories by 10%
+
   },
 });
 
@@ -265,7 +291,7 @@ const carbonTax = new Policy("Carbon Tax", {
   plastic: (factory) => {
     factory.resourceConsumption.oil *= 0.9; // Reduce oil consumption by 10%
     factory.economicGain *= 0.85; // Reduce economic gain by 15% due to the tax
-  }
+  },
 });
 
 const renewableEnergyIncentives = new Policy("Renewable Energy Incentives", {
@@ -273,25 +299,32 @@ const renewableEnergyIncentives = new Policy("Renewable Energy Incentives", {
     factory.resourceConsumption.oil = 0; // No more oil consumption
     factory.resourceConsumption.solar += 50; // Increase solar power usage
     factory.economicGain *= 1.1; // Increase economic gain by 10% due to lower energy costs
-  }
+  },
 });
 
 const waterConservation = new Policy("Water Conservation", {
   agriculture: (factory) => {
     factory.resourceConsumption.water *= 0.8; // Reduce water consumption by 20%
     factory.economicGain *= 0.9; // Reduce economic gain by 10% due to less water availability
-  }
+  },
 });
 
 const educationAndTraining = new Policy("Education and Training", {
-  all: (factory) => { // Affects all industries
+  all: (factory) => {
+    // Affects all industries
     factory.productivity *= 1.2; // Increase productivity by 20%
     factory.economicGain *= 1.1; // Increase economic gain by 10% due to higher productivity
-  }
+  },
 });
 
-
-const policyPool = [electricCarIncentive, deforestationBan, carbonTax, renewableEnergyIncentives, waterConservation, educationAndTraining];
+const policyPool = [
+  electricCarIncentive,
+  deforestationBan,
+  carbonTax,
+  renewableEnergyIncentives,
+  waterConservation,
+  educationAndTraining,
+];
 
 function getRandomPolicies(policies, count) {
   let shuffled = policies.slice(0);
@@ -302,14 +335,15 @@ function getRandomPolicies(policies, count) {
   return shuffled.slice(0, count);
 }
 
-function promptUser(policies) {
-  console.log("Please choose a policy");
-  for (let i = 0; i < policies.length; i++) {
-    console.log(`${i + 1}. ${policies[i].name}`);
+function promptUser(selectedPolicies) {
+  let userChoice = window.prompt("Choose a policy: " + selectedPolicies.map((policy, index) => `${index+1}. ${policy.name}`).join(", "));
+  if (parseInt(userChoice) === 4) {
+    return null;
   }
-  let choice = parseInt(prompt("Enter the number of your chosen policy:")) - 1;
-  return policies[choice];
+  let selectedPolicy = selectedPolicies[parseInt(userChoice) - 1];  // assuming choices are 1-indexed
+  return selectedPolicy;
 }
+
 
 const maxPerCapitaIncome = 500000;
 
@@ -395,9 +429,48 @@ function triggerRandomEvent(countries) {
       if (Math.random() < eventLikelihoods[country.countryName][eventName]) {
         let randomEvent = getRandomEventByName(eventName);
         applyRandomEventEffects(country, randomEvent);
+        console.log(randomEvent);
       }
     }
   }
+}
+
+let norlandiaData = {
+  totalPollution: [],
+  landPollution: [],
+  airPollution: [],
+  waterPollution: [],
+};
+let sudoriaData = {
+  totalPollution: [],
+  landPollution: [],
+  airPollution: [],
+  waterPollution: [],
+};
+let estasiaData = {
+  totalPollution: [],
+  landPollution: [],
+  airPollution: [],
+  waterPollution: [],
+};
+let westhavenData = {
+  totalPollution: [],
+  landPollution: [],
+  airPollution: [],
+  waterPollution: [],
+};
+let australenData = {
+  totalPollution: [],
+  landPollution: [],
+  airPollution: [],
+  waterPollution: [],
+};
+
+function updateData(country, countryData) {
+  countryData.totalPollution.push(country.totalPollution);
+  countryData.landPollution.push(country.landPollution);
+  countryData.airPollution.push(country.airPollution);
+  countryData.waterPollution.push(country.waterPollution);
 }
 
 function simulateDay(countries, difficulty) {
@@ -411,14 +484,24 @@ function simulateDay(countries, difficulty) {
 
   for (let country of countries) {
     applyDifficultySettings(country, difficulty);
+    if(chosenPolicy !== null){
     chosenPolicy.apply(country);
+    }
 
     country.renewResource();
     country.consumeResources();
+    country.pollutionDecay();
     country.happiness = calculateHappiness(country);
   }
 }
 let allCountries = [norlandia, sudoria, estasia, westhaven, australen];
+
+function removeFactoryFromAllCountries(factory,num){
+  //always remove num% + num amount of industry from the country
+  allCountries.forEach(country=>{
+    country.removeFactory(factory, num);
+  });
+}
 
 function getRandomEventByName(eventName) {
   return randomEvents.find((event) => event.name === eventName);
@@ -430,9 +513,11 @@ function applyRandomEventEffects(country, randomEvent) {
 }
 
 function formatObject(obj) {
-  let formatted = '';
+  let formatted = "";
   for (let [key, value] of Object.entries(obj)) {
+    if(value > 0){
     formatted += `${key}: ${value}, `;
+    }
   }
   return formatted.slice(0, -2); // Remove the last comma and space
 }
@@ -460,28 +545,6 @@ function createCountryBlock(country) {
   return block;
 }
 
-// Display country blocks
-allCountries.forEach((country) => {
-  const countryBlock = createCountryBlock(country);
-  container.appendChild(countryBlock);
-});
-
-// Add click event for the "Run Simulation" button
-document.getElementById("runSimulation").addEventListener("click", function () {
-  // Simulate the day when the button is clicked
-
-      let chosenDifficulty = chooseDifficulty();
-      console.log(chosenDifficulty);
-
-      if (difficulties[chosenDifficulty]) {
-        // Simulate a day with the chosen difficulty
-        simulateDay(allCountries, chosenDifficulty);
-        updateCountryInfo(); // Update displayed country info
-      } else {
-        console.log("Invalid difficulty level chosen.");
-      }
-});
-
 // Additional functions for updating UI and handling user interactions
 function updateCountryInfo() {
   // Update country blocks with new data
@@ -497,12 +560,227 @@ function updateCountryInfo() {
       <p>Land Pollution: ${allCountries[index].landPollution}</p>
       <p>Water Pollution: ${allCountries[index].waterPollution}</p>
       <p>Industry: ${formatObject(allCountries[index].factories)}</p>
-      <p>Natural Resource: ${formatObject(allCountries[index].naturalResource)}</p>
+      <p>Natural Resource: ${formatObject(
+        allCountries[index].naturalResource
+      )}</p>
 
       <!-- Update other stats as needed -->
     `;
   });
 }
+
+// Display country blocks
+allCountries.forEach((country) => {
+  const countryBlock = createCountryBlock(country);
+  container.appendChild(countryBlock);
+});
+
+let charts = {}; // Global object to hold all chart instances
+
+function updateChartData(chart, newData) {
+  for (let i = 0; i < newData.datasets.length; i++) {
+    chart.data.datasets[i].data = newData.datasets[i].data;
+  }
+  chart.data.labels = newData.labels || chart.data.labels;
+  chart.update();
+}
+
+function plotData(canvasId, countryData) {
+  return new Promise((resolve, reject) => {
+    try {
+      const ctx = document.getElementById(canvasId).getContext("2d");
+      if (!charts[canvasId]) {
+        // Create a new chart
+        charts[canvasId] = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: Array.from({ length: 100 }, (_, i) => i + 1), // Assuming 100 turns
+            datasets: [
+              {
+                label: "Total Pollution",
+                data: countryData.totalPollution,
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+                type: "line",
+              },
+              {
+                label: "Land Pollution",
+                data: countryData.landPollution,
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "Air Pollution",
+                data: countryData.airPollution,
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "Water Pollution",
+                data: countryData.waterPollution,
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "linear",
+                position: "bottom",
+              },
+            },
+          },
+        });
+      } else {
+        // Update the existing chart
+        const newData = {
+          labels: Array.from({ length: 100 }, (_, i) => i + 1), // Assuming 100 turns
+          datasets: [
+            {
+              data: countryData.totalPollution,
+            },
+            {
+              data: countryData.landPollution,
+            },
+            {
+              data: countryData.airPollution,
+            },
+            {
+              data: countryData.waterPollution,
+            },
+          ],
+        };
+        updateChartData(charts[canvasId], newData);
+      }
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function animateLoadingBar(duration) {
+  return new Promise((resolve) => {
+    const loadingBar = document.getElementById('loading-bar');
+    let start = null;
+
+    function step(timestamp) {
+      if (start === null) start = timestamp;
+      const elapsed = timestamp - start;
+
+      // Update the width of the loading bar
+      const progress = Math.min(elapsed / duration, 1);
+      loadingBar.style.width = `${progress * 100}%`;
+
+      // If the animation duration is over, resolve the Promise
+      if (elapsed < duration) {
+        requestAnimationFrame(step);
+      } else {
+        loadingBar.style.width = '0%';  // Reset for the next turn
+        resolve();
+      }
+    }
+
+    requestAnimationFrame(step);
+  });
+}
+
+
+function checkGameOverOrWin(country) {
+  // Check for game over conditions for specific countries
+  if (country.totalPollution > country.pollutionTolerance) {
+    alert(
+      `Game Over for ${country.countryName}! Total pollution exceeded acceptable levels.`
+    );
+    return true;
+  }
+
+  for (const resource in country.naturalResource) {
+    if (country.naturalResource.hasOwnProperty(resource)) {
+      if (country.naturalResource[resource] < 20) {
+        alert(
+          `Game Over for ${country.countryName}! ${resource} has been depleted.`
+        );
+        return true;
+      }
+    }
+  }
+
+  // Check for happiness level
+  if (country.happinessLevel < 30) {
+    // Replace 30 with the actual threshold
+    alert(
+      `Game Over for ${country.countryName}! Happiness level dropped too low.`
+    );
+    return true;
+  }
+
+  // Check for game won conditions
+  if (country.totalPollution < 50 && country.happinessLevel > 80) {
+    // Replace 50 and 80 with the actual thresholds
+    alert(
+      `Congratulations, you won for ${country.countryName}! Pollution is under control and happiness is high.`
+    );
+    return true;
+  }
+  return false;
+}
+
+// Add click event for the "Run Simulation" button
+document
+  .getElementById("runSimulation")
+  .addEventListener("click", async function () {
+    let chosenDifficulty = chooseDifficulty();
+
+    // This flag will keep track of whether the game is still running.
+    let gameIsRunning = true;
+
+    if (difficulties[chosenDifficulty]) {
+      while (gameIsRunning) { // Loop will continue running until gameIsRunning is set to false
+        simulateDay(allCountries, chosenDifficulty);
+        updateCountryInfo();
+
+        // Update and check each country
+        const countries = [norlandia, sudoria, estasia, westhaven, australen];
+        const dataSets = [
+          norlandiaData,
+          sudoriaData,
+          estasiaData,
+          westhavenData,
+          australenData,
+        ];
+        const canvasIds = [
+          "norlandiaChart",
+          "sudoriaChart",
+          "estasiaChart",
+          "westhavenChart",
+          "australenChart",
+        ];
+
+        for (let i = 0; i < countries.length; i++) {
+          await updateData(countries[i], dataSets[i]);
+          await plotData(canvasIds[i], dataSets[i]);
+
+          // Add the check for game over or won scenarios
+          if (checkGameOverOrWin(countries[i])) {
+            gameIsRunning = false; // This will break out of the while loop
+            break; // Break out of the for loop if game is over or won for this country
+          }
+        }
+
+        // Wait for 1 second before the next iteration
+        if (gameIsRunning) {
+          await animateLoadingBar(3000);
+        }
+      }
+    } else {
+      console.log("Invalid difficulty level chosen.");
+    }
+  });
 
 // Initialize the UI when the page loads
 function initializeUI() {
