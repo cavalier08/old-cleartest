@@ -1,4 +1,4 @@
-//0.5.3
+//0.5.4
 class Country {
   constructor(
     countryName,
@@ -88,7 +88,7 @@ class Country {
     this.totalPollution = this.calculateTotalPollution();
   }
   renewResource() {
-    this.naturalResource[forests] += 0.1 * (100 - this.totalPollution);
+    this.naturalResource["forests"] += 0.1 * (100 - this.totalPollution);
   }
 }
 
@@ -327,10 +327,10 @@ function chooseDifficulty(){
 function simulateDay(countries, difficulty) {
   let selectedPolicies = getRandomPolicies(policyPool, 3);
 
-  let chosenPolicy = promptUserForPolicy(selectedPolicies);
+  let chosenPolicy = promptUser(selectedPolicies);
 
   for (let country of countries) {
-    applyDifficulty(country, difficulty);
+    applyDifficultySettings(country, difficulty);
     chosenPolicy.apply(country);
     country.renewResource();
     country.consumeResources();
