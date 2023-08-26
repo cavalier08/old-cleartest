@@ -1,4 +1,4 @@
-//0.7.0
+//0.7.2
 class Country {
   constructor(
     countryName,
@@ -369,15 +369,13 @@ function promptUser(selectedPolicies) {
 const maxPerCapitaIncome = 500000;
 
 function calculateHappiness(country) {
+  let happiness = country.happiness||50;
   let perCapitaIncome = country.economy / country.population;
-
-  // Scaling the per capita income to a happiness scale of 0 to 100.
-  let happiness = (perCapitaIncome / maxPerCapitaIncome) * 100;
-
-  // Ensuring happiness remains between 0 and 100.
-  if (happiness > 100) happiness = 100;
-  if (happiness < 0) happiness = 0;
-
+  let economyFactor = Math.log(perCapitaIncome + 1) / Math.log(100001);
+  let pollutionFactor = 1 - (country.totalPollution / 50);
+  let adjustment = 0.5 * economyFactor + 0.6 * pollutionFactor;
+  happiness = happiness + (adjustment - 0.5) * 0.05;
+  happiness = Math.max(0, Math.min(100, happiness));
   return happiness;
 }
 
@@ -560,6 +558,7 @@ const policyButtons = document.getElementById("policyButtons");
 function createCountryBlock(country) {
   const block = document.createElement("div");
   block.className = "country-block";
+  block.id = country.countryName+'Block';
   block.innerHTML = `
     <h2>${country.countryName}</h2>
     <p>Economy: ${country.economy}</p>
@@ -572,6 +571,7 @@ function createCountryBlock(country) {
     <p>Natural Resource: ${formatObject(country.naturalResource)}</p>
     <!-- Add more stats as needed -->
   `;
+  block.style.display='none';
   return block;
 }
 
@@ -599,11 +599,50 @@ function updateCountryInfo() {
   });
 }
 
+function showCountryBlock(countryName){
+  const allBlocks = document.querySelectorAll('.country-block');
+  allBlocks.forEach((block) => {
+    block.style.display = 'none';
+  });
+  const block = document.getElementById(countryName + 'Block');
+  if (block) {
+    block.style.display = 'block';
+  }
+}
+
 // Display country blocks
 allCountries.forEach((country) => {
   const countryBlock = createCountryBlock(country);
   container.appendChild(countryBlock);
 });
+
+const norlandiaRegion = document.getElementById("norlandiaRegion");
+norlandiaRegion.addEventListener('mouseover', () => showCountryBlock('Norlandia'));
+
+const sudoriaRegion = document.getElementById("sudoriaRegion");
+sudoriaRegion.addEventListener('mouseover', () => showCountryBlock('Sudoria'));
+
+const estasiaRegion = document.getElementById("estasiaRegion");
+estasiaRegion.addEventListener('mouseover', () => showCountryBlock('Estasia'));
+
+const westhavenRegion = document.getElementById("westhavenRegion");
+westhavenRegion.addEventListener('mouseover', () => showCountryBlock('Westhaven'));
+
+const australenRegion = document.getElementById("australenRegion");
+australenRegion.addEventListener('mouseover', () => showCountryBlock('Australen'));
+
+// If you'd like to hide the blocks when the mouse moves out of the region:
+const allRegions = [norlandiaRegion, sudoriaRegion, estasiaRegion, westhavenRegion, australenRegion];
+allRegions.forEach(region => {
+  region.addEventListener('mouseout', () => {
+    // Hide all blocks
+    const allBlocks = document.querySelectorAll('.country-block');
+    allBlocks.forEach((block) => {
+      block.style.display = 'none';
+    });
+  });
+});
+
 
 let charts = {}; // Global object to hold all chart instances
 
@@ -740,7 +779,7 @@ function checkGameOverOrWin(country) {
   }
 
   // Check for happiness level
-  if (country.happinessLevel < 30) {
+  if (country.happiness < 30) {
     // Replace 30 with the actual threshold
     alert(
       `Game Over for ${country.countryName}! Happiness level dropped too low.`
@@ -749,7 +788,7 @@ function checkGameOverOrWin(country) {
   }
 
   // Check for game won conditions
-  if (country.totalPollution < 50 && country.happinessLevel > 80) {
+  if (country.totalPollution < 10 && country.happiness > 90) {
     // Replace 50 and 80 with the actual thresholds
     alert(
       `Congratulations, you won for ${country.countryName}! Pollution is under control and happiness is high.`
