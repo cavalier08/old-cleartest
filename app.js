@@ -281,7 +281,7 @@ const electricCarIncentive = new Policy("Electric Car Incentive", {
   car: (factory) => {
     factory.economicGain *= 0.5; // Reduce economic gain of car factories by 50%
     factory.resourceConsumption["oil"] = 0;
-    removeFactoryFromAllCountries("car", 10);
+    removeFactoryFromAllCountries("car", 40);
   },
   tech: (factory) => {
     factory.economicGain *= 1.1; // Increase economic gain of tech factories by 10%
@@ -294,7 +294,7 @@ const deforestationBan = new Policy("Deforestation Ban", {
   mining: (factory) => {
     factory.resourceConsumption.forests = 0; // No more forest consumption
     factory.economicGain *= 0.7; // Reduce economic gain by 30% due to loss of forest resources
-    removeFactoryFromAllCountries("mining", 20);
+    removeFactoryFromAllCountries("mining", 50);
   },
 });
 
@@ -307,6 +307,7 @@ const carbonTax = new Policy("Carbon Tax", {
   plastic: (factory) => {
     factory.resourceConsumption.oil *= 0.9; // Reduce oil consumption by 10%
     factory.economicGain *= 0.85; // Reduce economic gain by 15% due to the tax
+    removeFactoryFromAllCountries("plastic", 20);
   },
 });
 
@@ -315,6 +316,7 @@ const renewableEnergyIncentives = new Policy("Renewable Energy Incentives", {
     factory.resourceConsumption.oil = 0; // No more oil consumption
     factory.resourceConsumption.solar += 50; // Increase solar power usage
     factory.economicGain *= 1.1; // Increase economic gain by 10% due to lower energy costs
+    removeFactoryFromAllCountries("textile", 20);
   },
 });
 
@@ -322,7 +324,7 @@ const waterConservation = new Policy("Water Conservation", {
   agriculture: (factory) => {
     factory.resourceConsumption.water *= 0.8; // Reduce water consumption by 20%
     factory.economicGain *= 0.9; // Reduce economic gain by 10% due to less water availability
-    removeFactoryFromAllCountries("agriculture", 10);
+    removeFactoryFromAllCountries("agriculture", 40);
   },
 });
 
@@ -369,10 +371,10 @@ function promptUser(selectedPolicies) {
 const maxPerCapitaIncome = 500000;
 
 function calculateHappiness(country) {
-  let happiness = country.happiness||50;
+  let happiness = country.happiness || 50;
   let perCapitaIncome = country.economy / country.population;
   let economyFactor = Math.log(perCapitaIncome + 1) / Math.log(100001);
-  let pollutionFactor = 1 - (country.totalPollution / 50);
+  let pollutionFactor = 1 - country.totalPollution / 50;
   let adjustment = 0.5 * economyFactor + 0.6 * pollutionFactor;
   happiness = happiness + (adjustment - 0.5) * 0.05;
   happiness = Math.max(0, Math.min(100, happiness));
@@ -435,11 +437,11 @@ const randomEvents = [
 ];
 
 const eventLikelihoods = {
-  Norlandia: { Earthquake: 0.1, Flood: 0.2 },
-  Sudoria: { Earthquake: 0.2, Flood: 0.1 },
-  Estasia: { Earthquake: 0.15, Flood: 0.15 },
-  Westhaven: { Earthquake: 0.05, Flood: 0.05 },
-  Australen: { Earthquake: 0.1, Flood: 0.1 },
+  Norlandia: { Earthquake: 0.05, Flood: 0.1 },
+  Sudoria: { Earthquake: 0.1, Flood: 0.05 },
+  Estasia: { Earthquake: 0.075, Flood: 0.075 },
+  Westhaven: { Earthquake: 0.025, Flood: 0.025 },
+  Australen: { Earthquake: 0.05, Flood: 0.05 },
 };
 
 function triggerRandomEvent(countries) {
@@ -447,8 +449,8 @@ function triggerRandomEvent(countries) {
     for (let eventName in eventLikelihoods[country.countryName]) {
       if (Math.random() < eventLikelihoods[country.countryName][eventName]) {
         let randomEvent = getRandomEventByName(eventName);
+        alert(`${country.countryName} is undergoing an ${randomEvent.name}`);
         applyRandomEventEffects(country, randomEvent);
-        console.log(randomEvent);
       }
     }
   }
@@ -558,7 +560,7 @@ const policyButtons = document.getElementById("policyButtons");
 function createCountryBlock(country) {
   const block = document.createElement("div");
   block.className = "country-block";
-  block.id = country.countryName+'Block';
+  block.id = country.countryName + "Block";
   block.innerHTML = `
     <h2>${country.countryName}</h2>
     <p>Economy: ${country.economy}</p>
@@ -571,7 +573,7 @@ function createCountryBlock(country) {
     <p>Natural Resource: ${formatObject(country.naturalResource)}</p>
     <!-- Add more stats as needed -->
   `;
-  block.style.display='none';
+  block.style.display = "none";
   return block;
 }
 
@@ -585,10 +587,18 @@ function updateCountryInfo() {
       <p>Population: ${allCountries[index].population}</p>
       <p>Economy: ${allCountries[index].economy}</p>
       <p>Happiness: ${parseFloat(allCountries[index].happiness).toFixed(2)}</p>
-      <p>TotalPollution: ${parseFloat(allCountries[index].totalPollution).toFixed(2)}</p>
-      <p>Air Pollution: ${parseFloat(allCountries[index].airPollution).toFixed(2)}</p>
-      <p>Land Pollution: ${parseFloat(allCountries[index].landPollution).toFixed(2)}</p>
-      <p>Water Pollution: ${parseFloat(allCountries[index].waterPollution).toFixed(2)}</p>
+      <p>TotalPollution: ${parseFloat(
+        allCountries[index].totalPollution
+      ).toFixed(2)}</p>
+      <p>Air Pollution: ${parseFloat(allCountries[index].airPollution).toFixed(
+        2
+      )}</p>
+      <p>Land Pollution: ${parseFloat(
+        allCountries[index].landPollution
+      ).toFixed(2)}</p>
+      <p>Water Pollution: ${parseFloat(
+        allCountries[index].waterPollution
+      ).toFixed(2)}</p>
       <p>Industry: ${formatObject(allCountries[index].factories)}</p>
       <p>Natural Resource: ${formatObject(
         allCountries[index].naturalResource
@@ -599,14 +609,14 @@ function updateCountryInfo() {
   });
 }
 
-function showCountryBlock(countryName){
-  const allBlocks = document.querySelectorAll('.country-block');
+function showCountryBlock(countryName) {
+  const allBlocks = document.querySelectorAll(".country-block");
   allBlocks.forEach((block) => {
-    block.style.display = 'none';
+    block.style.display = "none";
   });
-  const block = document.getElementById(countryName + 'Block');
+  const block = document.getElementById(countryName + "Block");
   if (block) {
-    block.style.display = 'block';
+    block.style.display = "block";
   }
 }
 
@@ -618,62 +628,77 @@ allCountries.forEach((country) => {
 
 function redirectToCountryPage(countryName) {
   switch (countryName) {
-    case 'Norlandia':
+    case "Norlandia":
       window.location.href = "norlandia.html";
       break;
-    case 'Sudoria':
+    case "Sudoria":
       window.location.href = "sudoria.html";
       break;
-    case 'Estasia':
+    case "Estasia":
       window.location.href = "estasia.html";
       break;
-    case 'WestHaven':
+    case "WestHaven":
       window.location.href = "westhaven.html";
       break;
-    case 'Australen':
+    case "Australen":
       window.location.href = "australen.html";
       break;
     default:
-      console.error('Invalid country name:', countryName);
+      console.error("Invalid country name:", countryName);
       break;
   }
 }
 
 // Add event listeners
 const norlandiaRegion = document.getElementById("norlandiaRegion");
-norlandiaRegion.addEventListener('mouseover', () => showCountryBlock('Norlandia'));
-norlandiaRegion.addEventListener('click', () => redirectToCountryPage('Norlandia'));
+norlandiaRegion.addEventListener("mouseover", () =>
+  showCountryBlock("Norlandia")
+);
+norlandiaRegion.addEventListener("click", () =>
+  redirectToCountryPage("Norlandia")
+);
 
 const sudoriaRegion = document.getElementById("sudoriaRegion");
-sudoriaRegion.addEventListener('mouseover', () => showCountryBlock('Sudoria'));
-sudoriaRegion.addEventListener('click', () => redirectToCountryPage('Sudoria'));
+sudoriaRegion.addEventListener("mouseover", () => showCountryBlock("Sudoria"));
+sudoriaRegion.addEventListener("click", () => redirectToCountryPage("Sudoria"));
 
 const estasiaRegion = document.getElementById("estasiaRegion");
-estasiaRegion.addEventListener('mouseover', () => showCountryBlock('Estasia'));
-estasiaRegion.addEventListener('click', () => redirectToCountryPage('Estasia'));
+estasiaRegion.addEventListener("mouseover", () => showCountryBlock("Estasia"));
+estasiaRegion.addEventListener("click", () => redirectToCountryPage("Estasia"));
 
 const westhavenRegion = document.getElementById("westhavenRegion");
-westhavenRegion.addEventListener('mouseover', () => showCountryBlock('WestHaven'));
-westhavenRegion.addEventListener('click', () => redirectToCountryPage('WestHaven'));
+westhavenRegion.addEventListener("mouseover", () =>
+  showCountryBlock("WestHaven")
+);
+westhavenRegion.addEventListener("click", () =>
+  redirectToCountryPage("WestHaven")
+);
 
 const australenRegion = document.getElementById("australenRegion");
-australenRegion.addEventListener('mouseover', () => showCountryBlock('Australen'));
-australenRegion.addEventListener('click', () => redirectToCountryPage('Australen'));
-
-
+australenRegion.addEventListener("mouseover", () =>
+  showCountryBlock("Australen")
+);
+australenRegion.addEventListener("click", () =>
+  redirectToCountryPage("Australen")
+);
 
 // If you'd like to hide the blocks when the mouse moves out of the region:
-const allRegions = [norlandiaRegion, sudoriaRegion, estasiaRegion, westhavenRegion, australenRegion];
-allRegions.forEach(region => {
-  region.addEventListener('mouseout', () => {
+const allRegions = [
+  norlandiaRegion,
+  sudoriaRegion,
+  estasiaRegion,
+  westhavenRegion,
+  australenRegion,
+];
+allRegions.forEach((region) => {
+  region.addEventListener("mouseout", () => {
     // Hide all blocks
-    const allBlocks = document.querySelectorAll('.country-block');
+    const allBlocks = document.querySelectorAll(".country-block");
     allBlocks.forEach((block) => {
-      block.style.display = 'none';
+      block.style.display = "none";
     });
   });
 });
-
 
 let charts = {}; // Global object to hold all chart instances
 
