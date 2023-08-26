@@ -649,15 +649,17 @@ function updateCountryInfo() {
   });
 }
 
+let currentBlock = null;
+
 function showCountryBlock(countryName) {
-  const allBlocks = document.querySelectorAll(".country-block");
-  allBlocks.forEach((block) => {
-    block.style.display = "none";
-  });
+  if (currentBlock) {
+    currentBlock.style.display = "none";
+  }
   const block = document.getElementById(countryName + "Block");
   if (block) {
     block.style.display = "block";
   }
+  currentBlock = block;
 }
 
 // Display country blocks
