@@ -1,0 +1,54 @@
+/*0.6.1 CSS code (styles.css) */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  
+  #container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  .country-block {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+  }
+  
+  #policyButtons {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #runSimulation {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .hidden {
+    display: none;
+  }
+  
+  
+  /* Add more styles as needed */
+  
