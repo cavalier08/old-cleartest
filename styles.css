@@ -1,7 +1,7 @@
 /*0.7.5 CSS code (styles.css) */
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Optima';
   margin: 0;
   padding: 0;
   background-color: #f0f0f0;
@@ -13,14 +13,22 @@ body {
   padding: 20px;
 }
 
-.country-block {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 20px;
-  width: 200px;
-  margin: 10px;
-  text-align: center;
-}
+  .bar {
+    height: 2px;
+    width: 5vw;
+    background-color: var(--orange);
+    margin: auto;
+  }
+
+  .country-block {
+    background-color: rgba(0, 0, 0, 70%);
+    color: white;
+    padding: 20px;
+    width: 300px;
+    margin-top: 60px;
+    text-align: center;
+    border-radius: 10px;
+  }
 
 #policyButtons {
   display: flex;
