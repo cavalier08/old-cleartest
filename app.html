@@ -1,4 +1,4 @@
-<!--0.7.4-->
+<!--0.7.5-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,8 +37,23 @@
     <button id="runSimulation" class="run-simulation-button">
       Run Simulation
     </button>
-    <div id="policyButtons"></div>
-    <!-- Loading Bar Container -->
+    <button id="startNextRound" style="display: none;">Start Next Round</button>
+    <div id="policyModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <p>Choose a policy:</p>
+        <div id="policyButtons"></div>
+      </div>
+    </div> 
+    <div id="difficultyModal" class="modal">
+      <div class="modal-content">
+        <h4>Choose a difficulty level</h4>
+        <button onclick="setDifficulty('easy')">Easy</button>
+        <button onclick="setDifficulty('normal')">Normal</button>
+        <button onclick="setDifficulty('hard')">Hard</button>
+      </div>
+    </div>    
+     <!-- Loading Bar Container -->
     <div id="loading-bar" style="width: 0%; height: 30px; background-color: green;"></div>
   </body>
   <script src="app.js"></script>
