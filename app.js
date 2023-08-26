@@ -257,7 +257,41 @@ const deforestationBan = new Policy("Deforestation Ban", {
   },
 });
 
-const policyPool = [electricCarIncentive, deforestationBan];
+const carbonTax = new Policy("Carbon Tax", {
+  car: (factory) => {
+    factory.resourceConsumption.coal *= 0.9; // Reduce coal consumption by 10%
+    factory.economicGain *= 0.8; // Reduce economic gain by 20% due to the tax
+  },
+  plastic: (factory) => {
+    factory.resourceConsumption.oil *= 0.9; // Reduce oil consumption by 10%
+    factory.economicGain *= 0.85; // Reduce economic gain by 15% due to the tax
+  }
+});
+
+const renewableEnergyIncentives = new Policy("Renewable Energy Incentives", {
+  textile: (factory) => {
+    factory.resourceConsumption.oil = 0; // No more oil consumption
+    factory.resourceConsumption.solar += 50; // Increase solar power usage
+    factory.economicGain *= 1.1; // Increase economic gain by 10% due to lower energy costs
+  }
+});
+
+const waterConservation = new Policy("Water Conservation", {
+  agriculture: (factory) => {
+    factory.resourceConsumption.water *= 0.8; // Reduce water consumption by 20%
+    factory.economicGain *= 0.9; // Reduce economic gain by 10% due to less water availability
+  }
+});
+
+const educationAndTraining = new Policy("Education and Training", {
+  all: (factory) => { // Affects all industries
+    factory.productivity *= 1.2; // Increase productivity by 20%
+    factory.economicGain *= 1.1; // Increase economic gain by 10% due to higher productivity
+  }
+});
+
+
+const policyPool = [electricCarIncentive, deforestationBan, carbonTax, renewableEnergyIncentives, waterConservation, educationAndTraining];
 
 function getRandomPolicies(policies, count) {
   let shuffled = policies.slice(0);
@@ -414,7 +448,7 @@ function createCountryBlock(country) {
   block.innerHTML = `
     <h2>${country.countryName}</h2>
     <p>Economy: ${country.economy}</p>
-    <p>Happiness: ${country.happiness}</p>
+    <p>Happiness: ${parseFloat(country.happiness).toFixed(2)}</p>
     <p>Total Pollution: ${country.totalPollution}</p>
     <p>Air Pollution: ${country.airPollution}</p>
     <p>Land Pollution: ${country.landPollution}</p>
@@ -457,7 +491,7 @@ function updateCountryInfo() {
       <h2>${allCountries[index].countryName}</h2>
       <p>Population: ${allCountries[index].population}</p>
       <p>Economy: ${allCountries[index].economy}</p>
-      <p>Happiness: ${allCountries[index].happiness}</p>
+      <p>Happiness: ${parseFloat(allCountries[index].happiness).toFixed(2)}</p>
       <p>TotalPollution: ${allCountries[index].totalPollution}</p>
       <p>Air Pollution: ${allCountries[index].airPollution}</p>
       <p>Land Pollution: ${allCountries[index].landPollution}</p>
