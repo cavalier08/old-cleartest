@@ -1,4 +1,4 @@
-//0.8.0
+//0.8.1
 class Country {
   constructor(
     countryName,
@@ -376,6 +376,9 @@ function promptUser(selectedPolicies) {
       policyButtonContainer.appendChild(button);
     });
 
+    const tip = document.getElementById("policyTip");
+    tip.textContent="Tips: "+getRandomNationalPolicy();
+
     // Show the modal
     modal.style.display = "block";
   });
@@ -390,6 +393,44 @@ function handlePolicyChoice(selectedPolicy) {
 }
 
 const maxPerCapitaIncome = 500000;
+function getRandomNationalPolicy() {
+  const randomIndex = Math.floor(Math.random() * nationalEnvironmentalPolicies.length);
+  return nationalEnvironmentalPolicies[randomIndex];
+}
+const nationalEnvironmentalPolicies = [
+  "Implement a carbon tax to reduce greenhouse gas emissions.",
+  "Establish strict emissions standards for industries and vehicles.",
+  "Invest in renewable energy sources such as wind and solar power.",
+  "Enforce regulations to protect critical ecosystems and wildlife habitats.",
+  "Promote energy-efficient building standards and retrofits.",
+  "Support research and development of clean energy technologies.",
+  "Implement a nationwide recycling program with incentives.",
+  "Develop and enforce laws against illegal logging and deforestation.",
+  "Create protected marine reserves to conserve ocean biodiversity.",
+  "Invest in public transportation infrastructure to reduce car emissions.",
+  "Promote the use of electric vehicles through incentives.",
+  "Implement water conservation policies and reduce water pollution.",
+  "Enforce restrictions on the use of harmful pesticides and herbicides.",
+  "Support organic farming practices and sustainable agriculture.",
+  "Implement plastic waste reduction and recycling programs.",
+  "Preserve and restore wetlands to mitigate flooding and protect ecosystems.",
+  "Establish a national emissions trading system (cap and trade).",
+  "Promote green building and sustainable urban planning.",
+  "Create green job initiatives in the renewable energy sector.",
+  "Support policies to phase out single-use plastics.",
+  "Invest in research to combat air and water pollution.",
+  "Enhance environmental education in schools and communities.",
+  "Enforce stricter regulations on industrial waste disposal.",
+  "Protect and restore native forests to combat deforestation.",
+  "Encourage responsible mining practices to minimize environmental impact.",
+  "Implement policies to reduce food waste and promote sustainable diets.",
+  "Support initiatives to combat invasive species and protect native flora/fauna.",
+  "Invest in clean and efficient public transportation networks.",
+  "Promote policies to reduce energy consumption in the industrial sector.",
+  "Establish emissions reduction targets in line with international agreements."
+];
+
+// You can access these national-level policy tips using nationalEnvironmentalPolicies[index], where index is a number from 0 to 29.
 
 function calculateHappiness(country) {
   let happiness = country.happiness || 50;
