@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quiz</title>
+    <link href="../css/fullsim.css" rel="stylesheet">
+    <link href="../css/quiz.css" rel="stylesheet">
+    <style>
+
+
+    </style>
+  </head>
+  <body>
+    <img src="../img/rose_background.jpg" class="background">
+    
+
+    <div class="navbar">
+      <div class="logo">
+          <button >
+              <a href="../index.html">
+                  ClearQuest
+              </a>
+          </button>
+      </div>
+      
+      <div class="navspacer">
+  
+      </div>
+      <div class="nav-right">
+          <button id="diagonal">
+              <a href="game.html">
+                  Play
+              </a>
+          </button>
+          <div class="dropdown">
+              <button class="dropdown-button">
+                  <a href="../index.html">
+                      Overview
+                      
+                  </a>
+              </button>
+              <div class="dropdown-content">
+                  <button >
+                      <a href="how-to-play.html">
+                          guide
+                      </a>
+                  </button>
+                  <button >
+                      <a href="countries.html">
+                          Countries
+                      </a>
+                  </button>
+                  <button >
+                      <a href="industries.html">
+                          Industries
+                      </a>
+                  </button>
+                  <button >
+                      <a href="policies.html">
+                          Policies
+                      </a>
+                  </button>
+              </div>
+          </div>
+      
+          
+      
+          <button >
+              <a href="inspiration.html">
+                  inspiration
+              </a>
+          </button>
+          <button>
+              <a href="quiz.html">
+                  Quiz
+              </a>
+          </button>
+          <button >
+              <a href="exit.html">
+                  Exit
+              </a>
+          </button>
+      </div>
+      
+  </div>
+  
+  <div class="title">
+    <h1>Quiz <div class="bar">
+
+    </div></h1>
+  </div>
+    <div id="quiz-container">
+      <div id="question-container">
+        <span id="question">Question text</span>
+      </div>
+      <div id="answer-buttons" class="btn-container"></div>
+      
+    </div>
+
+    <script>
+      const questionContainer = document.getElementById("question-container");
+      const answerButtonsElement = document.getElementById("answer-buttons");
+      const nextButton = document.getElementById("next-button");
+
+      let currentQuestionIndex = 0;
+      let score = 0;
+
+      const questions = [
+        {
+          question:
+            "Which policy helps reduce the economic gain of car factories by 50%?",
+          answers: [
+            { text: "Electric Car Incentive", correct: true },
+            { text: "Carbon Tax", correct: false },
+            { text: "Deforestation Ban", correct: false },
+            { text: "Education and Training", correct: false },
+          ],
+        },
+        {
+          question: "Which natural resource does the mining industry consume?",
+          answers: [
+            { text: "Coal", correct: false },
+            { text: "Oil", correct: false },
+            { text: "Forests", correct: true },
+            { text: "Water", correct: false },
+          ],
+        },
+        {
+          question:
+            "What happens to air pollution levels if no action is taken?",
+          answers: [
+            { text: "It remains constant", correct: false },
+            { text: "It decays by 10%", correct: true },
+            { text: "It increases by 5%", correct: false },
+            { text: "It halves", correct: false },
+          ],
+        },
+        {
+          question:
+            "What is the main industry that consumes forests in Norlandia?",
+          answers: [
+            { text: "Mining", correct: false },
+            { text: "Agriculture", correct: false },
+            { text: "Textile", correct: false },
+            { text: "Renewable Energy", correct: true },
+          ],
+        },
+        {
+          question:
+            "In which country is the textile industry most prominent based on economic gain?",
+          answers: [
+            { text: "Norlandia", correct: false },
+            { text: "Sudoria", correct: true },
+            { text: "Estasia", correct: false },
+            { text: "Australen", correct: false },
+          ],
+        },
+        {
+          question:
+            "Which policy helps conserve water in agricultural practices?",
+          answers: [
+            { text: "Water Conservation", correct: true },
+            { text: "Renewable Energy Incentives", correct: false },
+            { text: "Carbon Tax", correct: false },
+            { text: "Deforestation Ban", correct: false },
+          ],
+        },
+        {
+          question:
+            "What is the direct impact of implementing a Carbon Tax on plastic factories?",
+          answers: [
+            { text: "Increased oil consumption", correct: false },
+            { text: "Reduced oil consumption", correct: true },
+            { text: "No change in oil consumption", correct: false },
+            { text: "Reduced forest consumption", correct: false },
+          ],
+        },
+        {
+          question: "Which country has the highest GDP?",
+          answers: [
+            { text: "Norlandia", correct: false },
+            { text: "Sudoria", correct: false },
+            { text: "Estasia", correct: false },
+            { text: "Westhaven", correct: true },
+          ],
+        },
+        {
+          question:
+            "What happens to forest resources in Norlandia if pollution is reduced?",
+          answers: [
+            { text: "They increase", correct: true },
+            { text: "They decrease", correct: false },
+            { text: "They remain constant", correct: false },
+            { text: "They are unaffected", correct: false },
+          ],
+        },
+        {
+          question:
+            'What impact does the "Education and Training" policy have on all industries?',
+          answers: [
+            { text: "Increases productivity by 20%", correct: true },
+            { text: "Reduces economic gain by 10%", correct: false },
+            { text: "Increases economic gain by 10%", correct: true },
+            { text: "No impact", correct: false },
+          ],
+        },
+      ];
+
+      function startGame() {
+        currentQuestionIndex = 0;
+        score = 0;
+        nextQuestion();
+      }
+
+      function nextQuestion() {
+        showQuestion(questions[currentQuestionIndex]);
+      }
+
+      function showQuestion(question) {
+        questionContainer.innerText = question.question;
+        answerButtonsElement.innerHTML = "";
+        question.answers.forEach((answer) => {
+          const button = document.createElement("button");
+          button.innerText = answer.text;
+          button.classList.add("btn");
+          button.addEventListener("click", () => selectAnswer(answer));
+          answerButtonsElement.appendChild(button);
+        });
+      }
+
+      function selectAnswer(answer) {
+        const correct = answer.correct;
+        if (correct) {
+          score++;
+        }
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+          nextQuestion();
+        } else {
+          alert(
+            `Congratulations, you have completed the quiz! Your score is ${score}/${questions.length}.`
+          );
+        }
+      }
+
+      startGame();
+    </script>
+  </body>
+</html>
