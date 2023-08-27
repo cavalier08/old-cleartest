@@ -1,4 +1,4 @@
-//0.7.5
+//0.8.0
 class Country {
   constructor(
     countryName,
@@ -667,60 +667,26 @@ allCountries.forEach((country) => {
   container.appendChild(countryBlock);
 });
 
-function redirectToCountryPage(countryName) {
-  switch (countryName) {
-    case "Norlandia":
-      window.location.href = "norlandia.html";
-      break;
-    case "Sudoria":
-      window.location.href = "sudoria.html";
-      break;
-    case "Estasia":
-      window.location.href = "estasia.html";
-      break;
-    case "WestHaven":
-      window.location.href = "westhaven.html";
-      break;
-    case "Australen":
-      window.location.href = "australen.html";
-      break;
-    default:
-      console.error("Invalid country name:", countryName);
-      break;
-  }
-}
-
 // Add event listeners
 const norlandiaRegion = document.getElementById("norlandiaRegion");
 norlandiaRegion.addEventListener("mouseover", () =>
   showCountryBlock("Norlandia")
 );
-norlandiaRegion.addEventListener("click", () =>
-  redirectToCountryPage("Norlandia")
-);
 
 const sudoriaRegion = document.getElementById("sudoriaRegion");
 sudoriaRegion.addEventListener("mouseover", () => showCountryBlock("Sudoria"));
-sudoriaRegion.addEventListener("click", () => redirectToCountryPage("Sudoria"));
 
 const estasiaRegion = document.getElementById("estasiaRegion");
 estasiaRegion.addEventListener("mouseover", () => showCountryBlock("Estasia"));
-estasiaRegion.addEventListener("click", () => redirectToCountryPage("Estasia"));
 
 const westhavenRegion = document.getElementById("westhavenRegion");
 westhavenRegion.addEventListener("mouseover", () =>
   showCountryBlock("Westhaven")
 );
-westhavenRegion.addEventListener("click", () =>
-  redirectToCountryPage("WestHaven")
-);
 
 const australenRegion = document.getElementById("australenRegion");
 australenRegion.addEventListener("mouseover", () =>
   showCountryBlock("Australen")
-);
-australenRegion.addEventListener("click", () =>
-  redirectToCountryPage("Australen")
 );
 
 // If you'd like to hide the blocks when the mouse moves out of the region:
@@ -749,84 +715,6 @@ function updateChartData(chart, newData) {
   }
   chart.data.labels = newData.labels || chart.data.labels;
   chart.update();
-}
-
-function plotData(canvasId, countryData) {
-  return new Promise((resolve, reject) => {
-    try {
-      const ctx = document.getElementById(canvasId).getContext("2d");
-      if (!charts[canvasId]) {
-        // Create a new chart
-        charts[canvasId] = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: Array.from({ length: 100 }, (_, i) => i + 1), // Assuming 100 turns
-            datasets: [
-              {
-                label: "Total Pollution",
-                data: countryData.totalPollution,
-                borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1,
-                type: "line",
-              },
-              {
-                label: "Land Pollution",
-                data: countryData.landPollution,
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1,
-              },
-              {
-                label: "Air Pollution",
-                data: countryData.airPollution,
-                backgroundColor: "rgba(54, 162, 235, 0.2)",
-                borderColor: "rgba(54, 162, 235, 1)",
-                borderWidth: 1,
-              },
-              {
-                label: "Water Pollution",
-                data: countryData.waterPollution,
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            scales: {
-              x: {
-                type: "linear",
-                position: "bottom",
-              },
-            },
-          },
-        });
-      } else {
-        // Update the existing chart
-        const newData = {
-          labels: Array.from({ length: 100 }, (_, i) => i + 1), // Assuming 100 turns
-          datasets: [
-            {
-              data: countryData.totalPollution,
-            },
-            {
-              data: countryData.landPollution,
-            },
-            {
-              data: countryData.airPollution,
-            },
-            {
-              data: countryData.waterPollution,
-            },
-          ],
-        };
-        updateChartData(charts[canvasId], newData);
-      }
-      resolve();
-    } catch (error) {
-      reject(error);
-    }
-  });
 }
 
 async function animateLoadingBar(duration) {
@@ -904,6 +792,69 @@ document.getElementById("runSimulation").addEventListener("click", function () {
   chooseDifficulty();
 });
 
+const countries = [norlandia, sudoria, estasia, westhaven, australen];
+const dataSets = [
+  norlandiaData,
+  sudoriaData,
+  estasiaData,
+  westhavenData,
+  australenData,
+];
+
+function showModal(country, data) {
+  // Update modal title
+  document.getElementById('modalTitle').innerText = country;
+
+  // Display modal
+  let modal = document.getElementById('myModal');
+  modal.style.display = "block";
+
+  // Create chart datasets
+  let datasets = [];
+
+  // Total pollution as line graph
+  datasets.push({
+    type: 'line',
+    label: 'Total Pollution',
+    data: data.totalPollution,
+    borderWidth: 1,
+    fill: false
+  });
+
+  // Other pollution types as bar graph
+  for (let key in data) {
+    if (key !== 'totalPollution') {
+      datasets.push({
+        type: 'bar',
+        label: key,
+        data: data[key],
+        borderWidth: 1
+      });
+    }
+  }
+
+  // Create chart
+  const ctx = document.getElementById('modalCanvas').getContext('2d');
+  myChart = new Chart(ctx, {
+    type: 'bar',  // default type, but each dataset will override this
+    data: {
+      labels: [...Array(data.totalPollution.length).keys()],
+      datasets: datasets
+    }
+  });
+}
+
+function hideModal() {
+  // Hide modal
+  let modal = document.getElementById('myModal');
+  modal.style.display = "none";
+
+  // Destroy chart
+  if (myChart) {
+    myChart.destroy();
+  }
+}
+
 document
   .getElementById("startNextRound")
   .addEventListener("click", function () {
@@ -923,25 +874,8 @@ async function runSimulation() {
       await simulateDay(allCountries, chosenDifficulty);
       updateCountryInfo();
 
-      const countries = [norlandia, sudoria, estasia, westhaven, australen];
-      const dataSets = [
-        norlandiaData,
-        sudoriaData,
-        estasiaData,
-        westhavenData,
-        australenData,
-      ];
-      const canvasIds = [
-        "norlandiaChart",
-        "sudoriaChart",
-        "estasiaChart",
-        "westhavenChart",
-        "australenChart",
-      ];
-
       for (let i = 0; i < countries.length; i++) {
         await updateData(countries[i], dataSets[i]);
-        await plotData(canvasIds[i], dataSets[i]);
 
         if (checkGameOverOrWin(countries[i])) {
           gameIsRunning = false;
