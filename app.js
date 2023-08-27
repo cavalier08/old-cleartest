@@ -1,4 +1,4 @@
-//0.8.2
+//0.8.3
 class Country {
   constructor(
     countryName,
@@ -336,6 +336,36 @@ const educationAndTraining = new Policy("Education and Training", {
   },
 });
 
+const greenInfrastructure = new Policy("Green Infrastructure", {
+  construction: (factory) => {
+    factory.resourceConsumption.coal = 0; // No more coal consumption
+    factory.resourceConsumption.solar += 50; // Increase solar power usage
+    factory.economicGain *= 0.95; // Slight decrease in economic gain by 5% due to higher initial costs
+    addFactoryFromAllCountries("solar", 5);
+  }
+});
+
+const wasteRecycling = new Policy("Waste Recycling Initiative", {
+  plastic: (factory) => {
+    factory.resourceConsumption.land *= 0.7; // Reduce land pollution by 30%
+    factory.economicGain *= 1.05; // Increase economic gain by 5% from selling recycled materials
+    addFactoryFromAllCountries("recycling", 10);
+  },
+  tech: (factory) => {
+    factory.resourceConsumption.land *= 0.7; // Reduce land pollution by 30%
+    factory.economicGain *= 1.02; // Slight increase in economic gain by 2% due to recycling initiative
+  }
+});
+
+const sustainableFarming = new Policy("Sustainable Farming Practices", {
+  agriculture: (factory) => {
+    factory.resourceConsumption.water *= 0.6; // Reduce water consumption by 40%
+    factory.resourceConsumption.land *= 0.7; // Reduce land consumption by 30%
+    factory.economicGain *= 1.1; // Increase economic gain by 10% due to higher demand for organic produce
+    addFactoryFromAllCountries("organic_farm", 15);
+  }
+});
+
 const policyPool = [
   electricCarIncentive,
   deforestationBan,
@@ -343,7 +373,11 @@ const policyPool = [
   renewableEnergyIncentives,
   waterConservation,
   educationAndTraining,
+  wasteRecycling,
+  greenInfrastructure,
+  sustainableFarming
 ];
+
 
 function getRandomPolicies(policies, count) {
   let shuffled = policies.slice(0);
@@ -834,7 +868,7 @@ function playMusic(){
 let isNextRoundReady = false;
 
 document.getElementById("runSimulation").addEventListener("click", function () {
-  document.getElementById("runSimulation").style.visibility = "hidden";
+  document.getElementById("runSimulation").remove();
   document.getElementById("startNextRound").style.display = "block";
   playMusic();
   chooseDifficulty();
