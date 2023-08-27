@@ -826,10 +826,19 @@ function checkGameOverOrWin(country) {
 
 let isNextRoundReady = false;
 
+dfunction playMusic(){
+  const audio=document.getElementById('background-music');
+  audio.loop = true;
+  audio.play().catch(error => {
+    console.error("Playback failed.", error);
+  });
+}
+let isNextRoundReady = false;
+
 document.getElementById("runSimulation").addEventListener("click", function () {
   document.getElementById("runSimulation").style.visibility = "hidden";
   document.getElementById("startNextRound").style.display = "block";
-
+  playMusic();
   chooseDifficulty();
 });
 
