@@ -2,99 +2,47 @@
 <html>
   <head>
     <title>Quiz</title>
-    <link href="../css/fullsim.css" rel="stylesheet">
-    <link href="../css/quiz.css" rel="stylesheet">
     <style>
-
-
+      #quiz-container, #result-container {
+        width: 300px;
+        margin: auto;
+        text-align: center;
+      }
+      .btn {
+        margin: 5px;
+        padding: 5px;
+      }
+      .btn-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #result-container {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <img src="../img/rose_background.jpg" class="background">
-    
-
-    <div class="navbar">
-      <div class="logo">
-          <button >
-              <a href="../index.html">
-                  ClearQuest
-              </a>
-          </button>
-      </div>
-      
-      <div class="navspacer">
-  
-      </div>
-      <div class="nav-right">
-          <button id="diagonal">
-              <a href="game.html">
-                  Play
-              </a>
-          </button>
-          <div class="dropdown">
-              <button class="dropdown-button">
-                  <a href="../index.html">
-                      Overview
-                      
-                  </a>
-              </button>
-              <div class="dropdown-content">
-                      <a href="how-to-play.html">
-                          guide
-                      </a>
-                 
-                      <a href="countries.html">
-                          Countries
-                      </a>
-                 
-                      <a href="industries.html">
-                          Industries
-                      </a>
-                  
-                      <a href="policies.html">
-                          Policies
-                      </a>
-              </div>
-          </div>
-      
-          
-      
-          <button >
-              <a href="inspiration.html">
-                  inspiration
-              </a>
-          </button>
-          <button>
-              <a href="quiz.html">
-                  Quiz
-              </a>
-          </button>
-          <button >
-              <a href="exit.html">
-                  Exit
-              </a>
-          </button>
-      </div>
-      
-  </div>
-  
-  <div class="title">
-    <h1>Quiz <div class="bar">
-
-    </div></h1>
-  </div>
     <div id="quiz-container">
       <div id="question-container">
         <span id="question">Question text</span>
       </div>
       <div id="answer-buttons" class="btn-container"></div>
-      
+      <button id="next-button" class="btn" onclick="nextQuestion()">Next</button>
+    </div>
+
+    <div id="result-container">
+      <h1>Congratulations, you've completed the quiz!</h1>
+      <p>Your score is: <span id="score"></span></p>
+      <button id="restart-button" class="btn" onclick="startGame()">Restart</button>
     </div>
 
     <script>
       const questionContainer = document.getElementById("question-container");
       const answerButtonsElement = document.getElementById("answer-buttons");
       const nextButton = document.getElementById("next-button");
+      const resultContainer = document.getElementById("result-container");
+      const scoreElement = document.getElementById("score");
 
       let currentQuestionIndex = 0;
       let score = 0;
@@ -199,11 +147,12 @@
           ],
         },
       ];
-
       function startGame() {
         currentQuestionIndex = 0;
         score = 0;
+        resultContainer.style.display = "none";
         nextQuestion();
+        document.getElementById("quiz-container").style.display = "block";
       }
 
       function nextQuestion() {
@@ -231,9 +180,9 @@
         if (currentQuestionIndex < questions.length) {
           nextQuestion();
         } else {
-          alert(
-            `Congratulations, you have completed the quiz! Your score is ${score}/${questions.length}.`
-          );
+          document.getElementById("quiz-container").style.display = "none";
+          scoreElement.innerText = `${score}/${questions.length}`;
+          resultContainer.style.display = "block";
         }
       }
 
