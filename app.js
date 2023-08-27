@@ -824,9 +824,7 @@ function checkGameOverOrWin(country) {
   return false;
 }
 
-let isNextRoundReady = false;
-
-dfunction playMusic(){
+function playMusic(){
   const audio=document.getElementById('background-music');
   audio.loop = true;
   audio.play().catch(error => {
