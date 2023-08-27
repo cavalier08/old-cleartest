@@ -1,4 +1,4 @@
-<!--0.7.6-->
+<!--0.8.0-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,32 +12,21 @@
   <body>
     <div class="map-container">
       <!-- Simulated country regions as blocks -->
-      <div id="norlandiaRegion" class="country-region">Norlandia</div>
-      <div id="sudoriaRegion" class="country-region">Sudoria</div>
-      <div id="estasiaRegion" class="country-region">Estasia</div>
-      <div id="westhavenRegion" class="country-region">WestHaven</div>
-      <div id="australenRegion" class="country-region">Australen</div>
+      <div id="norlandiaRegion" class="country-region" onclick="showModal('Norlandia', norlandiaData)">Norlandia</div>
+      <div id="sudoriaRegion" class="country-region" onclick="showModal('Sudoria', sudoriaData)">Sudoria</div>
+      <div id="estasiaRegion" class="country-region" onclick="showModal('Estasia', estasiaData)">Estasia</div>
+      <div id="westhavenRegion" class="country-region" onclick="showModal('Westhaven', westhavenData)">Westhaven</div>
+      <div id="australenRegion" class="country-region" onclick="showModal('Australen', australenData)">Australen</div>
     </div>
 
     <div id="container" class="country-container">
       <!-- Country blocks will be dynamically added here -->
     </div>
 
-    <h3>Norlandia</h3>
-    <canvas id="norlandiaChart" width="400" height="200"></canvas>
-    <h3>Sudoria</h3>
-    <canvas id="sudoriaChart" width="400" height="200"></canvas>
-    <h3>Estasia</h3>
-    <canvas id="estasiaChart" width="400" height="200"></canvas>
-    <h3>WestHaven</h3>
-    <canvas id="westhavenChart" width="400" height="200"></canvas>
-    <h3>Australen</h3>
-    <canvas id="australenChart" width="400" height="200"></canvas>
-
     <button id="runSimulation" class="run-simulation-button">
       Run Simulation
     </button>
-    <button id="startNextRound" style="display: none">Start Next Round</button>
+    <button id="startNextRound" style="display: none">Start New Round</button>
     <div id="policyModal" class="modal">
       <div class="modal-content">
         <span class="modal-close">&times;</span>
@@ -53,6 +42,13 @@
         <button onclick="setDifficulty('hard')">Hard</button>
       </div>
     </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+          <span class="close" onclick="hideModal()">&times;</span>
+          <h2 id="modalTitle"></h2>
+          <canvas id="modalCanvas"></canvas>
+      </div>
+  </div>
     <!-- Loading Bar Container -->
     <div
       id="loading-bar"
